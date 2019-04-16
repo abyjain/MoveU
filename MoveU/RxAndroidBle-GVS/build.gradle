@@ -1,0 +1,45 @@
+apply from: 'dependencies.gradle'
+apply from: 'checkstyle.gradle'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
+        classpath 'org.codehaus.groovy:groovy-android-gradle-plugin:2.0.0'
+    }
+}
+
+allprojects {
+    apply plugin: 'com.github.ben-manes.versions'
+    
+    repositories {
+        jcenter()
+        google()
+    }
+
+    buildscript {
+        repositories {
+            jcenter()
+        }
+    }
+
+    if (System.env.TRAVIS == 'true') {
+        tasks.withType(GroovyCompile) {
+            groovyOptions.fork = false
+        }
+        tasks.withType(Test) {
+            // containers (currently) have 2 dedicated cores and 4GB of memory
+            maxParallelForks = 2
+            minHeapSize = '128m'
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

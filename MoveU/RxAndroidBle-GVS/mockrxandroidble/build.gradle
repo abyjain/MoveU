@@ -1,0 +1,38 @@
+apply plugin: 'com.android.library'
+apply plugin: 'groovyx.android'
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+
+android {
+    compileSdkVersion 26
+
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 26
+        versionCode 1
+        versionName VERSION_NAME
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.ext.targetCompatibilityVersion
+        targetCompatibility rootProject.ext.targetCompatibilityVersion
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+
+    // Test dependencies
+    testCompileOnly rootProject.ext.libs.junit
+    testCompileOnly rootProject.ext.libs.groovy
+    testCompileOnly rootProject.ext.libs.spock
+    testCompileOnly rootProject.ext.libs.robospock
+    api project(path: ':rxandroidble')
+    api rootProject.ext.libs.rxjava
+}
